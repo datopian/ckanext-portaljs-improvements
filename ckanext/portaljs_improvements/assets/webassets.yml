@@ -1,0 +1,14 @@
+# portaljs_improvements-js:
+#   filter: rjsmin
+#   output: ckanext-portaljs_improvements/%(version)s-portaljs_improvements.js
+#   contents:
+#     - js/portaljs_improvements.js
+#   extra:
+#     preload:
+#       - base/main
+
+# portaljs_improvements-css:
+#   filter: cssrewrite
+#   output: ckanext-portaljs_improvements/%(version)s-portaljs_improvements.css
+#   contents:
+#     - css/portaljs_improvements.css
