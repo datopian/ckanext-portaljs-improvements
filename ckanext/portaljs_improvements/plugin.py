@@ -3,8 +3,10 @@ import ckan.plugins.toolkit as toolkit
 
 from ckanext.portaljs_improvements import actions
 
+
 class PortaljsImprovementsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IActions)
 
     # IConfigurer
@@ -13,9 +15,22 @@ class PortaljsImprovementsPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic',
-            'portaljs_improvements')
+                             'portaljs_improvements')
+
+    def configure(self, config):
+        # Certain config options must exists for the plugin to work. Raise an
+        # exception if they're missing.
+        missing_config = "{0} is not configured. Please amend your .ini file."
+        config_options = (
+            'ckanext.portaljs_improvements.portal_url',
+            'ckanext.portaljs_improvements.portal_secret',
+        )
+        for option in config_options:
+            if not config.get(option, None):
+                raise RuntimeError(missing_config.format(option))
 
     # IActions
+
     def get_actions(self):
 
         return {
