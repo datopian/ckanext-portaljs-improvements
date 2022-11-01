@@ -17,7 +17,8 @@ def revalidate_vercel(body):
 def package_create(original_action, context, data_dict):
     print("#########\n PACKAGE BEING CREATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'dataset': {'name': result['name']}}
+    groups = list(map(lambda group: return group['name'], result['groups']))                                                                 
+    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name'], 'groups': groups}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -26,7 +27,8 @@ def package_create(original_action, context, data_dict):
 def package_update(original_action, context, data_dict):
     print("#########\n PACKAGE BEING UPDATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'dataset': {'name': result['name']}}
+    groups = list(map(lambda group: return group['name'], result['groups']))                                                                 
+    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name'], 'groups': groups}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -35,7 +37,7 @@ def package_update(original_action, context, data_dict):
 def organization_create(original_action, context, data_dict):
     print("#########\n ORGANIZATION BEING CREATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'organization': {'name': result['name']}}
+    body = {'org': {'name': result['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -44,7 +46,7 @@ def organization_create(original_action, context, data_dict):
 def organization_update(original_action, context, data_dict):
     print("#########\n ORGANIZATION BEING UPDATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'organization': {'name': result['name']}}
+    body = {'org': {'name': result['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
