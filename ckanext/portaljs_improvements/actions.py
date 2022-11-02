@@ -16,9 +16,8 @@ def revalidate_vercel(body):
 @chained_action
 def package_create(original_action, context, data_dict):
     print("#########\n PACKAGE BEING CREATED \n #############", flush=True)
-    result = original_action(context, data_dict)
-    groups = list(map(lambda group: return group['name'], result['groups']))                                                                 
-    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name'], 'groups': groups}}
+    result = original_action(context, data_dict)                                                        
+    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name']}
     enqueue_job(revalidate_vercel, [body])
     return result
 
