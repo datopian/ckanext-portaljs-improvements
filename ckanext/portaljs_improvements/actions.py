@@ -16,8 +16,8 @@ def revalidate_vercel(body):
 @chained_action
 def package_create(original_action, context, data_dict):
     print("#########\n PACKAGE BEING CREATED \n #############", flush=True)
-    result = original_action(context, data_dict)
-    body = {'dataset': {'name': result['name']}}
+    result = original_action(context, data_dict)                                                        
+    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -25,8 +25,8 @@ def package_create(original_action, context, data_dict):
 @chained_action
 def package_update(original_action, context, data_dict):
     print("#########\n PACKAGE BEING UPDATED \n #############", flush=True)
-    result = original_action(context, data_dict)
-    body = {'dataset': {'name': result['name']}}
+    result = original_action(context, data_dict)                                                               
+    body = {'dataset': {'name': result['name'], 'orgName': result['organization']['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -43,7 +43,7 @@ def package_delete(original_action, context, data_dict):
 def organization_create(original_action, context, data_dict):
     print("#########\n ORGANIZATION BEING CREATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'organization': {'name': result['name']}}
+    body = {'org': {'name': result['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
@@ -60,7 +60,7 @@ def organization_delete(original_action, context, data_dict):
 def organization_update(original_action, context, data_dict):
     print("#########\n ORGANIZATION BEING UPDATED \n #############", flush=True)
     result = original_action(context, data_dict)
-    body = {'organization': {'name': result['name']}}
+    body = {'org': {'name': result['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
 
