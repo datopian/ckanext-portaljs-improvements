@@ -36,8 +36,11 @@ class PortaljsImprovementsPlugin(plugins.SingletonPlugin):
         return {
             'package_create': actions.package_create,
             'package_update': actions.package_update,
+            'package_delete': actions.package_delete,
             'group_create': actions.group_create,
             'group_update': actions.group_update,
+            'group_delete': actions.group_delete,
             'organization_create': actions.organization_create,
-            'organization_update': actions.organization_update
+            'organization_update': actions.organization_update,
+            'organization_delete': actions.organization_delete
         }

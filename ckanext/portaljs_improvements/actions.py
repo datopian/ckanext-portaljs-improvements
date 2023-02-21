@@ -1,5 +1,5 @@
 import requests
-from ckan.plugins.toolkit import chained_action, enqueue_job
+from ckan.plugins.toolkit import chained_action, enqueue_job, get_action
 from ckan.common import config
 
 
@@ -30,6 +30,14 @@ def package_update(original_action, context, data_dict):
     enqueue_job(revalidate_vercel, [body])
     return result
 
+@chained_action
+def package_delete(original_action, context, data_dict):
+    print("#########\n PACKAGE BEING DELETED \n #############", flush=True)
+    package_info = get_action('package_show')(None, { 'id': data_dict['id'] })
+    result = original_action(context, data_dict)
+    body = {'dataset': {'name': package_info['name']}}
+    enqueue_job(revalidate_vercel, [body])
+    return result
 
 @chained_action
 def organization_create(original_action, context, data_dict):
@@ -39,6 +47,14 @@ def organization_create(original_action, context, data_dict):
     enqueue_job(revalidate_vercel, [body])
     return result
 
+@chained_action
+def organization_delete(original_action, context, data_dict):
+    print("#########\n ORGANIZATION BEING DELETED \n #############", flush=True)
+    org_info = get_action('organization_show')(None, { 'id': data_dict['id'] })
+    result = original_action(context, data_dict)
+    body = {'organization': {'name': org_info['name']}}
+    enqueue_job(revalidate_vercel, [body])
+    return result
 
 @chained_action
 def organization_update(original_action, context, data_dict):
@@ -63,5 +79,14 @@ def group_update(original_action, context, data_dict):
     print("#########\n GROUP BEING UPDATED \n #############", flush=True)
     result = original_action(context, data_dict)
     body = {'group': {'name': result['name']}}
+    enqueue_job(revalidate_vercel, [body])
+    return result
+
+@chained_action
+def group_delete(original_action, context, data_dict):
+    print("#########\n GROUP BEING DELETED \n #############", flush=True)
+    group_info = get_action('group_show')(None, { 'id': data_dict['id'] })
+    result = original_action(context, data_dict)
+    body = {'group': {'name': group_info['name']}}
     enqueue_job(revalidate_vercel, [body])
     return result
