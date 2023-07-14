@@ -22,8 +22,8 @@ class PortaljsImprovementsPlugin(plugins.SingletonPlugin):
         # exception if they're missing.
         missing_config = "{0} is not configured. Please amend your .ini file."
         config_options = (
-            'ckanext.portaljs_improvements.portal_url',
-            'ckanext.portaljs_improvements.portal_secret',
+            'ckanext.portaljs_improvements.portal_urls',
+            'ckanext.portaljs_improvements.portal_secrets',
         )
         for option in config_options:
             if not config.get(option, None):

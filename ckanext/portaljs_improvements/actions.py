@@ -4,14 +4,16 @@ from ckan.common import config
 
 
 def revalidate_vercel(body):
-    print(body)
-    url = config.get('ckanext.portaljs_improvements.portal_url') + \
-        "/api/revalidate?secret=" + \
-        config.get('ckanext.portaljs_improvements.portal_secret')
-    print(url, flush=True)
-    response = requests.post(url, json=body)
-    print(response.text, flush=True)
+    urls = config.get('ckanext.portaljs_improvements.portal_urls').split(' ')
+    secrets = config.get('ckanext.portaljs_improvements.portal_secrets').split(' ')
+    for url, secret in zip(urls, secrets):
+        print("Sending post request to " + url + " with body " + str(body))
+        send_revalidate_request(url, secret, body)
 
+def send_revalidate_request(url, secret, body):
+    url = url + "/api/revalidate?secret=" + secret
+    response = requests.post(url, json=body)
+    print("Response for invalidate request for the following URL " + url + " " + response.text, flush=True)
 
 @chained_action
 def package_create(original_action, context, data_dict):
